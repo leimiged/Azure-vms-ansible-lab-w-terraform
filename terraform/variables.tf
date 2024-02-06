@@ -9,28 +9,20 @@ variable "virtual_machines" {
     { name = "ansibleUbuntu", os = "ubuntu", create = true },
     { name = "workerDebian", os = "debian", create = true },
     { name = "workerCentos", os = "centos", create = true },
+    { name = "workerWin2016", os = "windows", create = true },
   ]
 }
 
 variable "os_types" {
   description = "Map of OS types for each virtual machine"
   type        = map(string)
-  default     = {
-    ubuntu = "publicIPUbuntu"
-    debian = "publicIPDebian"
-    centos = "publicIPCentOS"
+  default = {
+    ubuntu  = "publicIPUbuntu"
+    debian  = "publicIPDebian"
+    centos  = "publicIPCentOS"
+    windows = "publicIPWindows"
   }
 }
-
-resource "azurerm_public_ip" "public_ip" {
-  for_each = var.os_types
-
-  name                = each.value
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  allocation_method   = "Dynamic"
-}
-
 
 variable "resource_group_name" {
   default = "ansible_lab"
@@ -47,5 +39,3 @@ variable "network_name" {
 variable "subnet_name" {
   default = "subnetansiblelab"
 }
-
-
